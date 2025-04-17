@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8">
+
+		<title>Ошибки реализации</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Роман Ганин">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!--  -->
+		<script src="https://unpkg.com/tabbable/dist/index.umd.js"></script>
+		<script src="https://unpkg.com/focus-trap/dist/focus-trap.umd.js"></script>
+		<style>
+			.page {
+				background: #282828;
+				color: #fff;
+				font-size: 18px;
+			}
+			.page__content {
+				max-width: 1024px;
+				margin: 0 auto;
+			}
+			.modal {
+				position: fixed;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				display: flex;
+				visibility: hidden;
+			}
+			.modal_visible {
+				visibility: visible;
+			}
+			.modal__backdrop {
+				position: absolute;
+				left: 0;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				background-color: #00000060;
+			}
+			.modal_focus-trap .modal__body {
+				background-color: #5f8069;
+			}
+			.modal__body {
+				margin: auto;
+				background-color: #222;
+				padding: 1em;
+				border: 3px solid #eeeeee30;
+				position: relative;
+			}
+			.modal__close {
+				float: right;
+			}
+			.link_inherit {
+				color: inherit;
+			}
+			.image {
+				display: block;
+				margin: 1em auto;
+			}
+			.input,
+			.button {
+				font-size: 1.5rem;
+			}
+			.input:focus,
+			.button:focus {
+				outline: 8px solid #ce2727;
+				outline-style: dotted;
+			}
+		</style>
+	</head>
+	<body class="page">
+		<main class="page__content">
+			<h3 class="heading heading_level_3"><a class="link link_inherit" href="#">Важность отказа от модальных окон в пользовательских интерфейсах: как они снижают конверсию и вызывают негативную реакцию</a></h3>
+			<p>В мире веб-дизайна и разработки пользовательских интерфейсов модальные окна часто используются для привлечения внимания пользователей к важной информации или для выполнения определенных действий. Однако с течением времени стало очевидно, что модальные окна могут не только снижать конверсию, но и вызывать негативную реакцию у пользователей. В этой статье мы рассмотрим, почему стоит избегать использования модальных окон и какие альтернативы могут улучшить пользовательский опыт и повысить конверсию.</p>
+			<h4 class="heading heading_level_4"><a class="link link_inherit" href="#">Что такое модальное окно?</a></h4>
+			<p>Модальное окно — это всплывающее окно, которое временно блокирует основной контент на странице, требуя от пользователя взаимодействия, прежде чем он сможет продолжить работу с основным содержимым. Обычно они используются для отображения уведомлений, форм подписки или подтверждений.</p>
+			<img id="trap" class="image" src="assets/pictures/its-a-trap.jpeg" width="800" alt="" onclick="modal.classList.add('modal_visible'); btnClose.focus()">
+			<h4 class="heading heading_level_4"><a class="link link_inherit" href="#">Почему модальные окна снижают конверсию?</a></h4>
+			<ul>
+				<li>
+					<b>Прерывание пользовательского потока:</b>
+					<p>Одной из главных причин, по которой модальные окна могут снижать конверсию, является их способность прерывать поток пользовательского взаимодействия. Когда пользователь сосредоточен на выполнении определенной задачи, внезапное появление модального окна может вызвать раздражение и даже заставить его покинуть сайт. Это особенно верно для пользователей, которые просто хотят быстро получить доступ к информации или совершить покупку.</p>
+				</li>
+				<li>
+					<b>Создание негативного пользовательского опыта:</b>
+					<p>Модальные окна часто воспринимаются как навязчивые и раздражающие элементы интерфейса. Они заставляют пользователей выполнять нежелательные действия, такие как закрытие окна или выполнение дополнительного клика, что может вызвать негативное отношение к вашему бренду или продукту.</p>
+				</li>
+				<li>
+					<b>Проблемы с доступностью:</b>
+					<p>Для пользователей с ограниченными возможностями модальные окна могут представлять собой серьезное препятствие. Они могут быть труднодоступны для навигации с помощью клавиатуры или экранных читалок, что делает ваш сайт менее инклюзивным и недоступным для всех пользователей.</p>
+				</li>
+				<li>
+					<b>Замедление времени загрузки:</b>
+					<p>Модальные окна могут увеличить время загрузки страниц, особенно если они содержат тяжелые элементы, такие как изображения или видео. Это может негативно сказаться на пользовательском опыте и привести к увеличению показателя отказов.</p>
+				</li>
+			</ul>
+			<h4 class="heading heading_level_4"><a class="link link_inherit" href="#">Альтернативные решения</a></h4>
+			<p>К счастью, существует множество альтернатив модальным окнам, которые могут улучшить пользовательский опыт:</p>
+			<ul>
+				<li>
+					<b>Ненавязчивые уведомления:</b>
+					<p style="position: relative; z-index: 10;">Используйте ненавязчивые уведомления или баннеры, которые появляются в верхней или нижней части экрана. Они не блокируют основной контент и позволяют пользователям самостоятельно решать, когда с ними взаимодействовать.</p>
+				</li>
+				<li>
+					<b>Инлайн-контент:</b>
+					<p>Встраивайте важную информацию непосредственно в контент страницы. Это позволяет пользователям видеть информацию естественно, без прерывания их взаимодействия с сайтом.</p>
+				</li>
+				<li>
+					<b>Боковые панели:</b>
+					<p>Боковые панели могут быть использованы для отображения дополнительной информации или действий, не блокируя основной контент. Они позволяют пользователям контролировать, когда и как взаимодействовать с дополнительными элементами.</p>
+				</li>
+				<li>
+					<b>Улучшенные формы:</b>
+					<p>Если необходимо собрать информацию, используйте хорошо продуманные формы, которые интегрированы в основной контент и не требуют всплывающих окон.</p>
+				</li>
+			</ul>
+			<h4 class="heading heading_level_4"><a class="link link_inherit" href="#">Заключение</a></h4>
+			<p>Модальные окна, несмотря на их популярность, могут значительно ухудшить пользовательский опыт и снизить конверсию. Переход на более ненавязчивые и доступные методы взаимодействия с пользователями может существенно улучшить ваше взаимодействие с клиентами и повысить удовлетворенность пользователей. В конечном итоге, это приведет к более высокой конверсии и положительному восприятию вашего бренда.</p>
+			<br><br><br><br><br>
+			<img class="image" width="800" src="assets/pictures/run.webp" alt="">
+			<div id="modal" class="modal">
+				<div class="modal__backdrop"></div>
+				<div class="modal__body">
+					<button id="btnClose" class="button modal__close" type="button" onclick="modal.classList.remove('modal_visible')">×</button>
+					<h3 class="heading heading_level_3"><a class="link link_inherit" href="#">Привет! Я — бесячая модалка!</a></h3>
+					<p>Я перекрываю контент, а ещё у меня неправильная реализация</p>
+					<p>Ещё у меня есть <code>&lt;input&gt;</code>, которое можно заполнить:</p>
+					<input class="input" type="text">
+					<button id="btnActivate" class="button" type="button" onclick="isActive ? trap.deactivate() : trap.activate()">Включить focus-trap</button>
+					<img class="image" src="assets/pictures/kick.webp" alt="">
+				</div>
+			</div>
+			<script>
+				var isActive = false
+				const trap = focusTrap.createFocusTrap('#modal', {
+					onActivate: function onActivate() {
+						isActive = true
+						btnActivate.innerText = 'Выключить focus-trap'
+						return modal.classList.add('modal_focus-trap');
+					},
+					onDeactivate: function onDeactivate() {
+						isActive = false
+						btnActivate.innerText = 'Включить focus-trap'
+						return modal.classList.remove('modal_focus-trap');
+					}
+				});
+			</script>
+		</main>
+	</body>
+</html>

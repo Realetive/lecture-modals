@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="ru">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>КВЗСМ или Краткое руководство по проектированию модальных окон</title>
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<style>
+			.reveal .slides {
+				text-align: start;
+			}
+			
+			.reveal blockquote {
+				margin-left: 0;
+				margin-right: 0;
+				width: 100%;
+			}
+
+			.reveal pre {
+				width: 100%;
+			}
+
+			.reveal .slide-background-content {
+				background-size: contain;
+			}
+
+      .fragment.blur-in {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .blur,
+      .fragment.blur-in.visible {
+        filter: blur(10px);
+      }
+
+      .columns {
+        display: grid;
+        grid-template-columns: 50% 50%;
+        grid-template-rows: 1fr 1fr;
+        grid-column-gap: 0.3em;
+        grid-row-gap: 0.3em;
+        font-size: 0.6em;
+      }
+
+      .columns__column_type_left { grid-area: 1 / 1 / 2 / 2; }
+      .columns__column_type_right { grid-area: 1 / 2 / 2 / 3; }
+		</style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+        <section id="intro" data-background-image="assets/pictures/intro.jpg">
+          <aside class="notes">
+            Добро пожаловать на борт SPB Frontend!
+            Сегодня мы говорим о модалках — что это такое, почему, 
+            а главное — как?
+            Меня зовут Роман и, кратко о себе…
+          </aside>
+        </section>
+        <section data-transition="fade-out">
+          <h2>О себе</h2>
+          <ul>
+            <li><del>Сам себя не похвалишь…</del></li>
+          </ul>
+        </section>
+        <section data-transition="fade">
+          <aside class="notes">
+            <ul>
+              <li>Профессионально занимаюсь разработкой более 10 лет (с 2010)</li>
+              <li>из которых 5 лет занимался преимущественно вёрсткой (примерно с 2011)
+                <p>т. е. было время, когда я знал CSS на уровне спецификации, хотя мне всё же далеко до уровня</p>
+                <ul>
+                  <li>София @ariarzer Валитова,</li>
+                  <li>Илья @SelenIT Стрельцин,</li>
+                  <li>Алёна @Workafrolic Батицкая</li>
+                  <li>или Максим @psywalker Усачев</li>
+                </ul>
+              </li>
+              <li>
+                Самостоятельно изучил БЭМ-стек (BEMHTML, i-bem.js, enb и borschik) и только потом устроился в Яндекс,
+                разработал на нём с десяток проектов
+              </li>
+              <li>один из которых потом пиарила Кхм…дуза</li>
+              <li>Выступаю уже почти 10 лет в Питере, Минске, Киеве, Москве на
+                <ul>
+                  <li>Web Standards Days,</li>
+                  <li>MODXpo,</li>
+                  <li>HolyJS,</li>
+                  <li>PiterCSS,</li>
+                  <li>Podlodka Crew,</li>
+                  <li>SPB Frontend,</li>
+                  <li>FrontendNight</li>
+                  <li>ITGM</li>
+                </ul>
+              </li>
+              <li>Открывал бар для разработчиков in💯gramm в Питере (RIP с началом пандемии)</li>
+            </ul>
+          </aside>
+          <h2>О себе</h2>
+          <ul>
+            <li>занимаюсь разработкой <u>более 10 лет</u> (≈ с 2010)</li>
+            <li class="fragment">разрабатываю <u>developers.sber.ru</u></li>
+            <li class="fragment">изучил <u>БЭМ-стек</u> <b>до</b> работы в Яндексе</li>
+          </ul>
+          <div class="fragment">
+            <ul>
+              <li><u>создал с <code>0</code></u> сервис, который пиарила <span class="blur">Кхмдуза</span><small>*</small></li>
+              <li class="fragment"><u>выступал</u> в
+                <span class="fragment">Питере,</span>
+                <span class="fragment">Минске,</span>
+                <span class="fragment">Киеве,</span>
+                <span class="fragment">Москве</span>
+                <span class="fragment">на Web Standards Days,</span>
+                <span class="fragment">MODXpo,</span>
+                <span class="fragment">HolyJS,</span>
+                <span class="fragment">PiterCSS,</span>
+                <span class="fragment">Podlodka Crew,</span>
+                <span class="fragment">FrontendNight,</span>
+                <span class="fragment">IT Global Meetup,</span>
+                <span class="fragment">SPB Frontend, и т. д…</span>
+              </li>
+              <li class="fragment"><u>открывал бар</u> для разработчиков in💯gramm</li>
+            </ul>
+            <p>
+              <small>
+                <sup>*</sup> Включено в России в реестр СМИ, выполняющих функции иностранного агента, а также в список нежелательных организаций.
+              </small>
+            </p>
+          </div>
+        </section>
+        <section>
+          <aside class="notes">
+            <p>JSX Control Statements — Babel-плагин, расширяющий базовый JSX конструкциями условий и циклов</p>
+          </aside>
+          <h2>Про что доклад?</h2>
+          <h3>Не про …</h3>
+          <div class="fragment">
+            <ul>
+              <li>очередную библиотеку, которая сделает «всё как надо»<sup>*</sup></li>
+              <li class="fragment">layout manager (или «Война z-index'ов»)</li>
+              <li class="fragment">General Data Protection Regulation (GDPR)</li>
+            </ul>
+            <br><br><br><br>
+            <p style="font-size: 0.5em;"><sup>*</sup> (здесь могла быть ваша реклама)</p>
+          </div>
+        </section>
+        <section>
+          <aside class="notes">
+            «просто 30 секунд или одну минуту – маленькую историческую справку дать» — КРАТЕНЬКО про историю шаблонизаторов
+          </aside>
+          <h2>Про что доклад?</h2>
+          <ul>
+            <li class="fragment">историю</li>
+            <li class="fragment">семантику</li>
+            <li class="fragment">ошибки</li>
+            <li class="fragment">best practices</li>
+            <li class="fragment">+ бонус: как рассчитать оптимальное количество модалок</li>
+          </ul>
+        </section>
+        <section>
+          <aside class="notes">
+            краткая история о том, что модальные окна испокон веков использовались для прерывания контекста, например:
+          </aside>
+          <h2>История</h2>
+        </section>
+        <section data-background-image="assets/pictures/word.png">
+          <aside class="notes">попытке закрытия несохранённого файла</aside>
+        </section>
+        <section data-background-video="assets/pictures/windows.mp4" data-background-video-muted>
+          <aside class="notes">попытке использования Windows 10 (шутка про обновления)</aside>
+        </section>
+        <section data-background-image="assets/pictures/malware.jpg">
+          <aside class="notes">майнеры</aside>
+        </section>
+        <section>
+          <aside class="notes">
+
+          </aside>
+          <h2>Аналогия прерывания IRL</h2>
+        </section>
+        <section data-background-video="assets/pictures/popup.mp4" data-background-video-muted data-background-video-loop>
+          <aside class="notes">консультант в магазине</aside>
+        </section>
+        <section data-background-image="assets/pictures/tea.png">
+          <aside class="notes">чайные промоутеры на Невском</aside>
+        </section>
+        <section data-background-image="assets/pictures/gusar.jpg">
+          <aside class="notes">девушки-гусарки на Дворцовой</aside>
+        </section>
+        <section data-background-image="assets/pictures/security.jpg">
+          <aside class="notes">звонок «службы безопасности банка»</aside>
+        </section>
+
+        <section data-transition="fade-out">
+          <aside class="notes">
+            какие есть МО
+          </aside>
+          <h2>История</h2>
+          <pre class="fragment"><code class="hljs js" data-trim data-line-numbers="1"><script type="text/template">
+            const answer = prompt('Сколько будет 150 + 150?', '')
+
+            const areYouSure = confirm(`${answer}? Вы уверены?`)
+              
+            alert('Фють-ха!')
+          </script></code></pre>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <img class="fragment" width="30%" height="auto" src="assets/pictures/prompt.png" alt="prompt">
+            <img style="opacity: 0;" width="30%" height="auto" src="assets/pictures/confirm.png" alt="confirm">
+            <img style="opacity: 0;" width="30%" height="auto" src="assets/pictures/alert.png" alt="alert">
+          </div>
+        </section>
+
+        <section data-transition="fade-out fade-in">
+          <aside class="notes">
+            какие есть МО
+          </aside>
+          <h2>История</h2>
+          <pre><code class="hljs js" data-trim data-line-numbers="3"><script type="text/template">
+            const answer = prompt('Сколько будет 150 + 150?', '')
+
+            const areYouSure = confirm(`${answer}? Вы уверены?`)
+              
+            alert('Фють-ха!')
+          </script></code></pre>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <img width="30%" height="auto" src="assets/pictures/prompt.png" alt="prompt">
+            <img class="fragment" width="30%" height="auto" src="assets/pictures/confirm.png" alt="confirm">
+            <img style="opacity: 0;" width="30%" height="auto" src="assets/pictures/alert.png" alt="alert">
+          </div>
+        </section>
+
+        <section data-transition="fade-in fade-out">
+          <aside class="notes">
+            какие есть МО
+          </aside>
+          <h2>История</h2>
+          <pre><code class="hljs js" data-trim data-line-numbers="5"><script type="text/template">
+            const answer = prompt('Сколько будет 150 + 150?', '')
+
+            const areYouSure = confirm(`${answer}? Вы уверены?`)
+              
+            alert('Фють-ха!')
+          </script></code></pre>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <img width="30%" height="auto" src="assets/pictures/prompt.png" alt="prompt">
+            <img width="30%" height="auto" src="assets/pictures/confirm.png" alt="confirm">
+            <img class="fragment" width="30%" height="auto" src="assets/pictures/alert.png" alt="alert">
+          </div>
+        </section>
+
+        <section data-transition="fade-in">
+          <aside class="notes">
+            какие есть МО
+          </aside>
+          <h2>История</h2>
+          <small>
+            <ul>
+              <li><code>prompt</code>, <code>confirm</code> и <code>alert</code> в JavaScript</li>
+              <li class="fragment">Modality из <a href="https://developer.apple.com/design/human-interface-guidelines/modality">Apple Human interface guidelines</a></li>
+              <li class="fragment">Sheets из <a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Apple Human interface guidelines</a></li>
+              <li class="fragment">Dialogs из <a href="https://m3.material.io/components/dialogs/guidelines">Google Material Design guidelines</a></li>
+              <li class="fragment">Notification / Toast</li>
+            </ul>
+          </small>
+        </section>
+
+        <!-- prompt('Сколько будет 150 + 150?', '')
+        confirm('Вы уверены?')
+        alert('Фють-ха!') -->
+        
+        <section>
+          <aside class="notes">
+            <small>что-то о том, что если у нас нет цели прервать контекст, например:</small>
+            <ul>
+              <li>переход к оплате</li>
+              <li>авторизация</li>
+              <li></li>
+            </ul>
+            <small>то всегда есть возможность использовать что-то менее травмирующее, чем модальное окно</small>
+          </aside>
+          <h2>Семантика</h2>
+          <!-- Говорить о семантике, а не об ошибках -->
+        </section>
+
+        <section data-background-image="assets/pictures/e-bay-1.png"></section>
+        <section data-background-image="assets/pictures/e-bay-2.png"></section>
+        <section data-background-image="assets/pictures/e-bay-3.png"></section>
+
+        <section>
+          <h2>Проблемы модальных окон</h2>
+          <ul>
+            <li class="fragment">прерывание контекста</li>
+          </ul>
+        </section>
+
+        <section data-background-image="assets/pictures/lamoda-1.png"></section>
+        <section data-background-image="assets/pictures/lamoda-2.png">
+          <aside class="notes">
+            Если модальное окно позволяет вернуться назад (закрыть его, нажать на ×), значит нам не важно вовлечение клиента в возникшую «воронку» —
+            а значит, мы можем в принципе отказаться от этого действия. В противном случае лучшим решением будет создание отдельной страницы (со своим URL'ом и
+            дизайном), обособляющем ЭТОТ контекст.
+          </aside>
+        </section>
+
+        <section>
+          <aside class="notes"></aside>
+          <h2>Проблемы модальных окон</h2>
+          <ul>
+            <li>прерывание контекста</li>
+            <li class="fragment">вынужденное «переприцеливание», если появление МО вызвано кликом по интерактивному элементу (кнопке) на десктопе</li>
+          </ul>
+        </section>
+
+        <section data-background-image="assets/pictures/ozon-1.png"></section>
+        <section data-background-image="assets/pictures/ozon-2.png"></section>
+
+        <section>
+          <aside class="notes">
+            <blockquote>
+              Если цель создания модалки — заполнение формы — курсор / фокус должен быть уже установлен в первое поле
+            </blockquote>
+          </aside>
+          <h2>Закон Фиттса</h2>
+          <!-- TODO: формула -->
+          <!-- TODO: Google Material design guideline -->
+          <!-- TODO: Раскрыть, что такое з-н Фиттса -->
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <img class="fragment" src="assets/pictures/fitts-1.png" alt="">
+            <img class="fragment" src="assets/pictures/fitts-2.png" alt="">
+          </div>
+        </section>
+
+        <section>
+          <aside class="notes"></aside>
+          <h2>Проблемы модальных окон</h2>
+          <ul>
+            <li>прерывание контекста</li>
+            <li>вынужденное «переприцеливание», если появление МО вызвано кликом по интерактивному элементу (кнопке) на десктопе</li>
+            <li class="fragment">ошибки реализации</li>
+          </ul>
+        </section>
+
+        <section>
+          <aside class="notes">
+            <ul>
+              <li>Клавиатурная навигация
+                <ul>
+                  <li>Esc (+ Safari)</li>
+                  <li>focus-trap</li>
+                </ul>
+              </li>
+              <li>Блокировка скролла контента под модалкой</li>
+              <li>z-index</li>
+              <li>восстановление контекста при перезагрузке страницы</li>
+            </ul>
+          </aside>
+          <h2>Ошибки реализации</h2>
+        </section>
+
+        <section data-background-image="assets/pictures/fails-examples-1.png" data-background-size="contain" data-transition="fade-out"></section>
+        <section data-background-video="assets/pictures/fails-examples-2.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-3.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-4.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-5.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-6.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-7.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+        <section data-background-video="assets/pictures/fails-examples-8.mov" data-background-size="contain" data-background-video-muted data-transition="fade-in"></section>
+
+        <section>
+          <aside class="notes"></aside>
+          <h2>Примеры использования МО</h2>
+          <blockquote></blockquote>
+        </section>
+
+        <section data-background-image="assets/pictures/medium-0.png" data-transition="fade-out"></section>
+        <section data-background-image="assets/pictures/medium-1.png" data-transition="fade-out fade-in"></section>
+        <section data-background-image="assets/pictures/medium-2.png" data-transition="fade-out fade-in"></section>
+        <section data-background-image="assets/pictures/medium-3.png" data-transition="fade-in"></section>
+
+        <section data-background-image="assets/pictures/dev.to-0.png" data-transition="fade-out"></section>
+        <section data-background-image="assets/pictures/dev.to-1.png" data-transition="fade-in"></section>
+
+        <section>
+          <aside class="notes"></aside>
+          <h2>Сбор лидов</h2>
+          <blockquote>
+            «Оставьте нам ваши персональные данные и мы „сольём“ их третьим лицам»
+          </blockquote>
+          <div class="r-stack">
+            <img src="assets/pictures/feedback-1.png" alt="" class="fragment">
+            <img src="assets/pictures/feedback-2.png" alt="" class="fragment">
+            <img src="assets/pictures/feedback-3.png" alt="" class="fragment">
+          </div>
+        </section>
+
+        <section data-background-video="assets/pictures/lead.mov" data-background-video-muted data-transition="fade-out fade-in"></section>
+        
+        <section>
+          <aside class="notes"></aside>
+          <h2>Предупреждение</h2>
+          <div class="r-stack">
+            <img src="assets/pictures/git-pornhub.png" alt="">
+          </div>
+        </section>
+
+        <section data-background-image="assets/pictures/git-pornhub-1.png" data-transition="fade-out"></section>
+        <section data-background-image="assets/pictures/git-pornhub-2.png" data-transition="fade-in"></section>
+
+        <section data-transition="fade-out">
+          <aside class="notes">
+            Это не полноценное МО — он берёт худшее из двух реализаций — перекрывает контент (как МО)
+            не по пользовательском запросу (как уведомление) + звук
+          </aside>
+          <h2>Чат с тех. поддержкой</h2>
+        </section>
+
+        <section data-background-video="assets/pictures/jivo.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
+
+        <section data-transition="fade-in">
+          <aside class="notes">
+            Это не полноценное МО — он берёт худшее из двух реализаций — перекрывает контент (как МО)
+            не по пользовательском запросу (как уведомление) + звук
+          </aside>
+          <h2>Чат с тех. поддержкой</h2>
+          <blockquote>
+            Чем заменить?
+          </blockquote>
+        </section>
+
+        <section>
+          <aside class="notes">            
+              Плохой (±) UX — предупреждение о потере введённых данных
+              Отдельный котёл для маркетологов, устанавливающих Exit-Intent
+              Хороший (±) UX — автоматическое сохранение введённых данных в браузерное хранилище (IndexedDB, WebSQL или localStorage) по URL'у с предложением восстановить данные при возвращении
+              + голосование: «Согласны или нет?»
+          </aside>
+          <h2>Закрытие окна / вкладки</h2>
+          <div class="r-stack">
+            <img class="fragment" src="assets/pictures/exit-intent.jpg" alt="">
+          </div>
+        </section>
+
+        <section data-background-image="assets/pictures/close-1.png" data-transition="fade-out"></section>
+        <section data-background-image="assets/pictures/close-2.png" data-transition="fade-in"></section>
+
+        <section>
+          <aside class="notes">
+            Хороший UX — не блокировать, а позволять отменить ошибочное действие + аналитика — если отмен больше половины — есть проблемы с дизайном (з-н Фиттса)
+          </aside>
+          <h2>Прерывание мискликов</h2>
+          <div class="r-stack">
+            <img class="fragment" src="assets/pictures/misclick.webp" style="height: 60vh !important;" alt="">
+            <img class="fragment" src="assets/pictures/misclick-confirm.png" style="height: 60vh !important;" alt="">
+          </div>
+        </section>
+
+        <section>
+          <aside class="notes">
+            Чем заменить: инлайн-редактирование (позволяет видеть / редактировать несколько полей) или отдельная страница (не теряется контекст при перезагрузке страницы)
+          </aside>
+          <h2>Модальное редактирование</h2>
+          <div class="r-stack">
+            <img class="fragment" src="assets/pictures/tables-1.png" alt="">
+            <img class="fragment" src="assets/pictures/tables-2.png" alt="">
+            <img class="fragment" src="assets/pictures/tables-3.png" alt="">
+          </div>
+        </section>
+
+        <section>
+          <h2>Если очень надо…</h2>
+          Не забудьте про:
+          <ul>
+            <li class="fragment"><code>role="dialog"</code></li>
+            <li class="fragment"><code>aria-modal="true"</code></li>
+            <li class="fragment"><code>aria-live="assertive"</code> — «фокус» для скринридеров</li>
+          </ul>
+          <blockquote class="fragment">
+            или просто используйте <code>&lt;dialog&gt;</code>
+            <small>уже содержит все необходимые role и aria-атрибуты + focus-trap</small>
+          </blockquote>
+          <blockquote class="fragment">
+            Отличная документация и примеры — в Доке: https://doka.guide/html/dialog/
+          </blockquote>
+        </section>
+
+        <section data-transition="fade-out">
+          <h2>Расчётная формула</h2>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{R \color{#191919} × p}{ \color{#191919} \sqrt{B × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{|R - 2| \color{#191919} × p}{ \color{#191919} \sqrt{B × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{|R - 2| × p}{ \color{#191919} \sqrt{B × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          <!-- <h2>Расчётная формула</h2> -->
+          \[
+           \frac{|R - 2| × p}{\sqrt{\color{#191919} B × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{|R - 2| × p}{\sqrt{B \color{#191919} × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{|R - 2| × p}{\sqrt{B × {exp}}} \color{#191919} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{|R - 2| × p}{\sqrt{B × {exp}}} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>  
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{8 × p}{\sqrt{B × {exp}}} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{8 × 1000}{\sqrt{B × {exp}}} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{8 × 1000}{\sqrt{50 млн. × {exp}}} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+           \frac{8 × 1000}{\sqrt{50 млн. × 6}} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+          \frac{8 000}{17320} × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+          \ 0,4618 × G = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+          \ 0,4618 × 0 = N
+          \]
+          <p>
+            <ul>
+              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li>p — количество страниц на проекте</li>
+              <li>B — бюджет проекта</li>
+              <li>exp — опыт дизайнера в годах</li>
+            </ul>
+          </p>
+        </section>
+        <section data-transition="fade-out fade-in">
+          <h2>Расчётная формула</h2>
+          \[
+          \ 0
+          \]
+          <p>
+            — максимальное <em>рекомендуемое</em> количество модальных окон на выбранном проекте
+          </p>
+        </section>
+  
+        <section data-background-image="assets/pictures/questions.jpg"></section>
+      </div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+    <script src="plugin/math/math.js"></script>
+		<script>
+			Reveal.initialize({
+				center: false,
+				hash: true,
+				transition: 'zoom',
+				// backgroundTransition: 'zoom',
+				plugins: [
+					RevealMarkdown,
+					RevealHighlight,
+					RevealNotes,
+          RevealMath.KaTeX,
+				]
+			})
+		</script>
+    <!-- Speaker Notes Server -->
+    <script src="socket.io/socket.io.js"></script>
+    <script src="node_modules/reveal-notes-server/client.js"></script>
+	</body>
+</html>
