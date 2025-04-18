@@ -48,6 +48,27 @@
 
       .columns__column_type_left { grid-area: 1 / 1 / 2 / 2; }
       .columns__column_type_right { grid-area: 1 / 2 / 2 / 3; }
+
+      #intro-1 {
+        perspective: 300px;
+        transform: translateZ(-50px) rotateY(305deg);
+        float: right;
+        position: relative;
+        top: -110px;
+        right: 40px;
+      }
+      #intro-2 {
+        perspective: 300px;
+        transform: translateZ(-50px) rotateY(45deg);
+        position: relative;
+      }
+      #intro-3 {
+        perspective: 300px;
+        transform: translateZ(-50px) rotateY(25deg);
+        position: relative;
+        top: -190px;
+        left: 200px;
+      }
 		</style>
 	</head>
 	<body>
@@ -60,6 +81,10 @@
             а главное — как?
             Меня зовут Роман и, кратко о себе…
           </aside>
+          <h4 style="position: relative; z-index: 1;">КВЗСМ или краткое руководство по проектированию модальных окон</h4>
+          <img id="intro-1" src="assets/pictures/virtual-reality.webp" alt="">
+          <img id="intro-2" src="assets/pictures/laptop.webp" width="300px" alt="">
+          <img id="intro-3" src="assets/pictures/popup-angry.webp" alt="">
         </section>
         <section data-transition="fade-out">
           <h2>О себе</h2>
@@ -71,15 +96,7 @@
           <aside class="notes">
             <ul>
               <li>Профессионально занимаюсь разработкой более 10 лет (с 2010)</li>
-              <li>из которых 5 лет занимался преимущественно вёрсткой (примерно с 2011)
-                <p>т. е. было время, когда я знал CSS на уровне спецификации, хотя мне всё же далеко до уровня</p>
-                <ul>
-                  <li>София @ariarzer Валитова,</li>
-                  <li>Илья @SelenIT Стрельцин,</li>
-                  <li>Алёна @Workafrolic Батицкая</li>
-                  <li>или Максим @psywalker Усачев</li>
-                </ul>
-              </li>
+              <li>сейчас занимаюсь разработкой developers.sber.ru</li>
               <li>
                 Самостоятельно изучил БЭМ-стек (BEMHTML, i-bem.js, enb и borschik) и только потом устроился в Яндекс,
                 разработал на нём с десяток проектов
@@ -134,7 +151,7 @@
         </section>
         <section>
           <aside class="notes">
-            <p>JSX Control Statements — Babel-плагин, расширяющий базовый JSX конструкциями условий и циклов</p>
+            <p>Про всё, что здесь упомянуто я тоже могу рассказать — приглашаю в кулуары</p>
           </aside>
           <h2>Про что доклад?</h2>
           <h3>Не про …</h3>
@@ -150,7 +167,8 @@
         </section>
         <section>
           <aside class="notes">
-            «просто 30 секунд или одну минуту – маленькую историческую справку дать» — КРАТЕНЬКО про историю шаблонизаторов
+            <p>Про что доклад?</p>
+            «просто 30 секунд или одну минуту – маленькую историческую справку дать» — КРАТЕНЬКО про историю…
           </aside>
           <h2>Про что доклад?</h2>
           <ul>
@@ -163,7 +181,7 @@
         </section>
         <section>
           <aside class="notes">
-            краткая история о том, что модальные окна испокон веков использовались для прерывания контекста, например:
+            модальные окна испокон веков использовались для прерывания контекста, например:
           </aside>
           <h2>История</h2>
         </section>
@@ -183,6 +201,9 @@
           <h2>Аналогия прерывания IRL</h2>
         </section>
         <section data-background-video="assets/pictures/popup.mp4" data-background-video-muted data-background-video-loop>
+          <aside class="notes">типичная модалка IRL</aside>
+        </section>
+        <section data-background-image="assets/pictures/consultant.jpg">
           <aside class="notes">консультант в магазине</aside>
         </section>
         <section data-background-image="assets/pictures/tea.png">
@@ -263,15 +284,11 @@
               <li class="fragment">Modality из <a href="https://developer.apple.com/design/human-interface-guidelines/modality">Apple Human interface guidelines</a></li>
               <li class="fragment">Sheets из <a href="https://developer.apple.com/design/human-interface-guidelines/sheets">Apple Human interface guidelines</a></li>
               <li class="fragment">Dialogs из <a href="https://m3.material.io/components/dialogs/guidelines">Google Material Design guidelines</a></li>
-              <li class="fragment">Notification / Toast</li>
+              <li class="fragment">Notification / Toast — «это другое»</li>
             </ul>
           </small>
         </section>
 
-        <!-- prompt('Сколько будет 150 + 150?', '')
-        confirm('Вы уверены?')
-        alert('Фють-ха!') -->
-        
         <section>
           <aside class="notes">
             <small>что-то о том, что если у нас нет цели прервать контекст, например:</small>
@@ -318,19 +335,28 @@
         <section data-background-image="assets/pictures/ozon-1.png"></section>
         <section data-background-image="assets/pictures/ozon-2.png"></section>
 
-        <section>
+        <section data-transition="fade-out">
           <aside class="notes">
             <blockquote>
               Если цель создания модалки — заполнение формы — курсор / фокус должен быть уже установлен в первое поле
             </blockquote>
           </aside>
           <h2>Закон Фиттса</h2>
-          <!-- TODO: формула -->
-          <!-- TODO: Google Material design guideline -->
-          <!-- TODO: Раскрыть, что такое з-н Фиттса -->
+          \[
+          \displaystyle T=a+b\log _{2}{\Bigg (}{\frac {D}{W}}+1{\Bigg )}
+          \]
+        </section>
+
+        <section data-transition="fade-in">
+          <aside class="notes">
+            <blockquote>
+              Если цель создания модалки — заполнение формы — курсор / фокус должен быть уже установлен в первое поле
+            </blockquote>
+          </aside>
+          <h2>Закон Фиттса</h2>
           <div style="display: flex; flex-direction: column; align-items: center;">
-            <img class="fragment" src="assets/pictures/fitts-1.png" alt="">
-            <img class="fragment" src="assets/pictures/fitts-2.png" alt="">
+            <img src="assets/pictures/fitts-1.png" alt="">
+            <img src="assets/pictures/fitts-2.png" alt="">
           </div>
         </section>
 
@@ -418,17 +444,11 @@
           <h2>Чат с тех. поддержкой</h2>
         </section>
 
-        <section data-background-video="assets/pictures/jivo.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in"></section>
-
-        <section data-transition="fade-in">
+        <section data-background-video="assets/pictures/jivo.mov" data-background-size="contain" data-background-video-muted data-transition="fade-out fade-in">
           <aside class="notes">
             Это не полноценное МО — он берёт худшее из двух реализаций — перекрывает контент (как МО)
             не по пользовательском запросу (как уведомление) + звук
           </aside>
-          <h2>Чат с тех. поддержкой</h2>
-          <blockquote>
-            Чем заменить?
-          </blockquote>
         </section>
 
         <section>
@@ -575,6 +595,7 @@
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>  
@@ -585,10 +606,11 @@
           \]
           <p>
             <ul>
-              <li>R — степень уважения к пользователю по 10-бальной шкале</li>
+              <li><b>R — степень уважения к пользователю по 10-бальной шкале</b></li>
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -600,9 +622,10 @@
           <p>
             <ul>
               <li>R — степень уважения к пользователю по 10-бальной шкале</li>
-              <li>p — количество страниц на проекте</li>
+              <li><b>p — количество страниц на проекте</b></li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -615,8 +638,9 @@
             <ul>
               <li>R — степень уважения к пользователю по 10-бальной шкале</li>
               <li>p — количество страниц на проекте</li>
-              <li>B — бюджет проекта</li>
+              <li><b>B — бюджет проекта</b></li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -630,7 +654,8 @@
               <li>R — степень уважения к пользователю по 10-бальной шкале</li>
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
-              <li>exp — опыт дизайнера в годах</li>
+              <li><b>exp — опыт дизайнера в годах</b></li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -645,6 +670,7 @@
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -659,6 +685,7 @@
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li>G — коэффициент Ганина</li>
             </ul>
           </p>
         </section>
@@ -673,6 +700,7 @@
               <li>p — количество страниц на проекте</li>
               <li>B — бюджет проекта</li>
               <li>exp — опыт дизайнера в годах</li>
+              <li><b>G — коэффициент Ганина</b></li>
             </ul>
           </p>
         </section>
@@ -709,8 +737,7 @@
 				]
 			})
 		</script>
-    <!-- Speaker Notes Server -->
-    <script src="socket.io/socket.io.js"></script>
-    <script src="node_modules/reveal-notes-server/client.js"></script>
+    <!-- <script src="socket.io/socket.io.js"></script> -->
+    <!-- <script src="node_modules/reveal-notes-server/client.js"></script> -->
 	</body>
 </html>
